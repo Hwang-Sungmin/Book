@@ -9,22 +9,33 @@
             font-size: 16px;
             font-family: Consolas, sans-serif;
         }
+        /* div.left_container {
+            width : 50%;
+            float: left;    
+        }    
+        div.right_container {
+            width : 50%;
+            float: right;    
+        }  */
+        
     </style>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="container">
+    <div class="search_container">
         <form method="get" action="{% url 'book:search' %}">
             <input type="text" name="sbook" placeholder="책 검색">
             <input type="submit" value="누르기">
-            
+            <input type="button" value="리셋버튼" onclick="location.href='{% url 'book:delete_all' %}'">
         </form>
         {{author}}
+        {{title}}
     </div>
 
-    <div class="container">
+    <div class="left_container" > 
         <table class="table">
             <thead>
                 <tr>
@@ -32,16 +43,35 @@
                     <th scope="col">작가</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for i in title %}
-                <tr> 
+            <tbody>               
+                {% for i in alldata %}
+                <tr>
                     <td>{{i.title}}</td>
                     <td>{{i.author}}</td>
+                    
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <!-- <div class="right_container" > 
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">작가</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in author %}
+                <tr>
+                    <td>{{j}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div> -->
+
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
     </script>

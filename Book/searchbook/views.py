@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from bs4 import BeautifulSoup
+# 데이터 저장을 위해 만듦
+from .models import Data
+
 import requests
 # 공백문자 제거를 위해 
 import re
@@ -11,7 +14,7 @@ def main(request):
 def search(request):    
     # 입력한 책 제목
     keyword = request.GET['sbook']
-
+    # 검색할때마다 지우기
     print(keyword)
     url = "https://search.kyobobook.co.kr/web/search?vPstrKeyWord="+keyword+"&orderClick=LAG"
     html = requests.get(url).text
@@ -24,8 +27,6 @@ def search(request):
     print(len(authors))
     
     # dic선언 type:class
-    
-    
     title = []
     author = []
     # strip()[시작:끝]  시작:끝의(-2)만큼 빼고[20:-2] 
@@ -34,13 +35,28 @@ def search(request):
 
         print(titles[i].text, authors[i].text.strip()[0:15])                
         
-        a = titles[i].text
-        b = authors[i].text.strip()[0:15]
-
-    
+        t = titles[i].text
+        a = authors[i].text.strip()[0:15]
         
-        title.append(a)
-        author.append(b)
+        t = t.replace("\n","")
+
+        # 문자열에서 부분지우기
+        a = a.replace("\r","")
+        a = a.replace("\n","")
+        a = a.replace("\t","")
+        a = a.replace(" ","")
+        title.append(t)
+        author.append(a)
+        
+        #DB에 저장
+        datas = Data()
+        datas.title = t
+        datas.author = a
+        datas.save()
+
+     
+        # t와 a로 데이터에 저장
+        
         # dic() key : value
         # 마지막 값만 들어가는데 어떻게 
         
@@ -50,17 +66,20 @@ def search(request):
         # 딕셔너리 = dict({키1: 값1, 키2: 값2})
 
         # 하나의 key 에 value 여러개 넣기
-        #value['title'] = titles[i].text
+        #value['title'] = titles[i].text    
         #value['author'] = authors[i].text.strip()[0:15]
     
-    print(title)
-    print(author)
+    all_data = Data.objects.all()
+     
     context = {
         'title' : title,
         'author' : author,
+        'alldata' : all_data,
     }
+    
     return render(request, 'main.html', context)
 
-def no_space(text):
-    text1 = re.sub('\r|\t|\n', '', text)
-    return text1
+def delete_all(request):
+    datas = Data.objects.all()
+    datas.delete()
+    return render(request, 'main.html')
