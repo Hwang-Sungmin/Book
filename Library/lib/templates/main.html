@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block style %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h4>도서 찾기</h4>
+    <form method="post" action="">
+        <input type="text" name="csrfmiddlewaretoken" value={{csrf_token}}>
+        <input type="text" name="id" placeholder="아이디 입력">
+        <input type="text" name="pwd" placeholder="비밀번호 입력">
+
+        <select id="select" name="comment">
+            <option value="">댓글 달 곳</option>
+            <optgroup label="오피스텔" name="op">
+                <option value="opgang" name="opgang">강남</option>
+                <option value="opbi" name="opbi">비강남</op>
+                <option value="opkk" name="opkk">경기</option>
+                <option value="opinbu" name="opkyung">인부천</option>
+                <option value="opchung" name="opkyung">충청</option>
+                <option value="opjun" name="opkyung">전라</option>
+                <option value="opkyungs" name="opkyung">경상</option>
+                <option value="opde" name="opkyung">대구</option>
+                <option value="opje" name="opkyung">제주</option>
+            </optgroup>
+            <optgroup label="휴게" name="hge">
+                <option value="hges" name="hges">서울</option>
+                <option value="hgek" name="hgek">경기</op>
+                <option value="hgei" name="hgei">인부천</option>
+            </optgroup>
+
+        </select>
+        <input type="submit" value="누르기">
+    </form>
+</div>
+
+{% endblock %}
