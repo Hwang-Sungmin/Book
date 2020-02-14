@@ -7,7 +7,83 @@ import requests
 # 공백문자 제거를 위해 
 import re
 
+# 구글 시트를 사용하기 위해서 import
+import gspread
+import pandas as pd
+from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+
 # Create your views here.
+def save(request):
+    datas = Data()
+    if requests.get['user_name']:
+        datas.name = requests.get['user_name']
+        datas.title = requests.get['book_title']
+        data.author = requests.get['book_author']
+    
+    print(datas)
+    return render(request, 'save.html')
+
+# 구글 시트에 저장되어있는 회원 정보 불러오기
+def call(request):
+    name = request.GET['user']
+    print(name)
+    scope = [
+    'https://spreadsheets.google.com/feeds',    
+    ]
+    json_file_name = 'key.json'
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
+    gc = gspread.authorize(credentials)
+    spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1L8V9TSVD9iW7p9svQBZw2PUq8zQ8I13JdzLPZ3xunQk/edit#gid=0'
+    # 스프레스시트 문서 가져오기 
+    doc = gc.open_by_url(spreadsheet_url)
+    # 시트 선택하기 : 시트 이름이 Raw 인 곳
+    worksheet = doc.worksheet('Raw')
+    seeAll = worksheet.get_all_values()
+    j = 0
+    save = []
+    time = []
+    kind = []
+    date = []
+    title = []
+    author = []
+    genre = []
+    for i in range(3,len(seeAll),1):   
+        if name in seeAll[i][3]:
+            j+=1
+            print(seeAll[i][0:7], j)
+            save.append(seeAll[i][0:7])
+            time.append(seeAll[i][0])  
+            kind.append(seeAll[i][1])  
+            date.append(seeAll[i][2])  
+            title.append(seeAll[i][4])  
+            author.append(seeAll[i][5])  
+            genre.append(seeAll[i][6])  
+        else:
+            pass
+    context ={
+        'save':save,
+        'time':time,
+        'kind':kind,
+        'date':date,
+        'author':author,
+        'title':title,
+        'genre':genre,
+    }
+    return render(request, 'save.html', context)
+    
+    # type : str
+    #print(type(seeAll[3][3]))
+    #print(seeAll[4:8][0][3])
+
+    #print(len(seeAll))
+    #print(seeAll[0])
+    #for i in len(seeAll):    
+    # row는 2부터 시작g
+    # 회차, 종류, 날짜, 이름, 제목, 저자, 장르
+    #insert= ['478','정기','2020. 1. 31','황성민','파프리카','츠츠이 야스타카'
+    #worksheet.insert_row(insert, 2)    
+
 def main(request):       
     return render(request, 'main.html')
 
@@ -53,7 +129,6 @@ def search(request):
         datas.title = t
         datas.author = a
         datas.save()
-
      
         # t와 a로 데이터에 저장
         
@@ -83,3 +158,13 @@ def delete_all(request):
     datas = Data.objects.all()
     datas.delete()
     return render(request, 'main.html')
+
+def delete_one(request, data_id):
+    datas = Data.objects.get(id=data_id)
+    datas.delete()
+
+    datas = Data.objects.all()
+    context = {
+        'alldata' : datas,
+    }    
+    return render(request, 'main.html', context)

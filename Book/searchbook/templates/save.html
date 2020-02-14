@@ -34,7 +34,6 @@
             <!--<input type="button" value="불러오기" onclick="location.href='{% url 'book:call' %}'">-->
         </form>
     </div>
-    <br>
     <div class="search_user">
         <form method="GET" action="{% url 'book:call' %}">
             <input type="text" id="user" name="user" placeholder="회원 검색">
@@ -47,26 +46,16 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">발표자</th>
-                    <th scope="col">제목</th>
-                    <th scope="col">작가</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>               
-                {% for i in alldata %}
+               
                 <tr>
-                    {% if i.name != None %}
-                    <td><input method="GET" type="text" name="user_name" value="{{i.name}}"></td>
-                    {% else %}
-                    <td><input method="GET" type="text" name="user_name" value=""></td>
-                    {% endif %}
-                    <td method="GET" name="book_title">{{i.title}}</td>       
-                    <td method="GET" name="book_author">{{i.author}}</td>
-                    <td><input type="button" name="data_id" value="지우기"
-                        onclick="location.href='{% url 'book:delete_one' i.id %}'"></td>
+                    <td>{{kind}}</td>
                     
+                    <!--<td><input method="GET" type="text" name="user_name" value="{{i.name}}"></td>-->              
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
     </div>
