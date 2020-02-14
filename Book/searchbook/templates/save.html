@@ -29,15 +29,17 @@
         <form method="GET" action="{% url 'book:search' %}">
             <input type="text" id="txt" name="sbook" placeholder="책 검색">
             <input type="submit" value="입력">
-            <input type="button" value="리셋" onclick="location.href='{% url 'book:delete_all' %}'">
+            <input type="button" value="리셋" onclick="location.href='{% url 'book:delete_all_book' %}'">
             <input type="button" value="저장" onclick="location.href='{% url 'book:save' %}'">
             <!--<input type="button" value="불러오기" onclick="location.href='{% url 'book:call' %}'">-->
         </form>
     </div>
+    <br>
     <div class="search_user">
         <form method="GET" action="{% url 'book:call' %}">
             <input type="text" id="user" name="user" placeholder="회원 검색">
             <input type="submit" value="입력">
+            <input type="button" value="리셋" onclick="location.href='{% url 'book:delete_all_user' %}'">
             <!--<input type="button" value="불러오기" onclick="location.href='{% url 'book:call' %}'">-->
         </form>
     </div>
@@ -46,16 +48,27 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col"></th>
+                    <th scope="col">회차</th>
+                    <th scope="col">모임종류</th>
+                    <th scope="col">날짜</th>
+                    <th scope="col">서명</th>
+                    <th scope="col">작가</th>
+                    <th scope="col">장르</th>
                 </tr>
             </thead>
-            <tbody>               
-               
+            <tbody>
+                {% for i in DB %}               
                 <tr>
-                    <td>{{kind}}</td>
+                    <td>{{i.time}}</td>
+                    <td>{{i.kind}}</td>
+                    <td>{{i.date}}</td>
+                    <td>{{i.title}}</td>
+                    <td>{{i.author}}</td>
+                    <td>{{i.genre}}</td>
                     
                     <!--<td><input method="GET" type="text" name="user_name" value="{{i.name}}"></td>-->              
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

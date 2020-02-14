@@ -29,7 +29,7 @@
         <form method="GET" action="{% url 'book:search' %}">
             <input type="text" id="txt" name="sbook" placeholder="책 검색">
             <input type="submit" value="입력">
-            <input type="button" value="리셋" onclick="location.href='{% url 'book:delete_all' %}'">
+            <input type="button" value="리셋" onclick="location.href='{% url 'book:delete_all_book' %}'">
             <input type="button" value="저장" onclick="location.href='{% url 'book:save' %}'">
             <!--<input type="button" value="불러오기" onclick="location.href='{% url 'book:call' %}'">-->
         </form>
@@ -39,6 +39,7 @@
         <form method="GET" action="{% url 'book:call' %}">
             <input type="text" id="user" name="user" placeholder="회원 검색">
             <input type="submit" value="입력">
+            <input type="button" value="리셋" onclick="location.href='{% url 'book:delete_all_user' %}'">
             <!--<input type="button" value="불러오기" onclick="location.href='{% url 'book:call' %}'">-->
         </form>
     </div>

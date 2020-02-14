@@ -7,3 +7,10 @@ class Data(models.Model):
     title = models.TextField()
     author = models.TextField()
     
+class DB(models.Model):
+    time = models.TextField()
+    kind = models.TextField()
+    date = models.TextField()
+    title = models.TextField()
+    author = models.TextField()
+    genre = models.TextField()

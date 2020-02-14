@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from bs4 import BeautifulSoup
 # 데이터 저장을 위해 만듦
-from .models import Data
+from .models import Data, DB
 
 import requests
 # 공백문자 제거를 위해 
@@ -41,6 +41,8 @@ def call(request):
     worksheet = doc.worksheet('Raw')
     seeAll = worksheet.get_all_values()
     j = 0
+    # list 사용하여 값 저장
+    tmp = []
     save = []
     time = []
     kind = []
@@ -51,24 +53,21 @@ def call(request):
     for i in range(3,len(seeAll),1):   
         if name in seeAll[i][3]:
             j+=1
-            print(seeAll[i][0:7], j)
-            save.append(seeAll[i][0:7])
-            time.append(seeAll[i][0])  
-            kind.append(seeAll[i][1])  
-            date.append(seeAll[i][2])  
-            title.append(seeAll[i][4])  
-            author.append(seeAll[i][5])  
-            genre.append(seeAll[i][6])  
+             #insert= ['478','정기','2020. 1. 31','황성민','파프리카','츠츠이 야스타카'
+            #print(seeAll[i][0:7], j)
+            inputDB = DB()
+            inputDB.time = seeAll[i][0]
+            inputDB.kind = seeAll[i][1]
+            inputDB.date = seeAll[i][2]
+            inputDB.title = seeAll[i][4]
+            inputDB.author = seeAll[i][5]
+            inputDB.genre = seeAll[i][6]
+            inputDB.save()
         else:
             pass
+    all_DB = DB.objects.all()    
     context ={
-        'save':save,
-        'time':time,
-        'kind':kind,
-        'date':date,
-        'author':author,
-        'title':title,
-        'genre':genre,
+        'DB' : all_DB,
     }
     return render(request, 'save.html', context)
     
@@ -154,11 +153,16 @@ def search(request):
     
     return render(request, 'main.html', context)
 
-def delete_all(request):
+def delete_all_book(request):
     datas = Data.objects.all()
     datas.delete()
     return render(request, 'main.html')
 
+def delete_all_user(request):
+    datas = DB.objects.all()
+    datas.delete()
+    return render(request, 'save.html')    
+    
 def delete_one(request, data_id):
     datas = Data.objects.get(id=data_id)
     datas.delete()
