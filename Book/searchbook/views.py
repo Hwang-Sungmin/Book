@@ -2,7 +2,8 @@ from django.shortcuts import render
 from bs4 import BeautifulSoup
 # 데이터 저장을 위해 만듦
 from .models import Data, DB
-
+# 동적사용
+from django.http.response import HttpResponse
 import requests
 # 공백문자 제거를 위해 
 import re
@@ -13,16 +14,23 @@ import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
+# 발표자 한명 저장
+def save_one_user(request):
+    a = request.GET['user_name']
+    b = request.GET['book_title']
+    c = request.GET['book_author']
+
+    print(a)
+    print(b)
+    print(c)
+    
+    return HttpResponse('', status=204 )
+
+
 # Create your views here.
 def save(request):
-    datas = Data()
-    if requests.get['user_name']:
-        datas.name = requests.get['user_name']
-        datas.title = requests.get['book_title']
-        data.author = requests.get['book_author']
-    
-    print(datas)
-    return render(request, 'save.html')
+      
+    return render(request, 'main.html')
 
 # 구글 시트에 저장되어있는 회원 정보 불러오기
 def call(request):
@@ -50,11 +58,15 @@ def call(request):
     title = []
     author = []
     genre = []
+    # 입력전에 디비 지우기
+    inputDB = DB.objects.all()
+    inputDB.delete()
+
     for i in range(3,len(seeAll),1):   
         if name in seeAll[i][3]:
             j+=1
              #insert= ['478','정기','2020. 1. 31','황성민','파프리카','츠츠이 야스타카'
-            #print(seeAll[i][0:7], j)
+            #print(seeAll[i][0:7], j)           
             inputDB = DB()
             inputDB.time = seeAll[i][0]
             inputDB.kind = seeAll[i][1]
@@ -98,8 +110,8 @@ def search(request):
     authors = soup.select('.detail > .author ')
 
     # 공백제거    
-    print(len(titles))
-    print(len(authors))
+    #print(len(titles))
+    #print(len(authors))
     
     # dic선언 type:class
     title = []
@@ -108,7 +120,7 @@ def search(request):
     
     for i in range(len(titles)):
 
-        print(titles[i].text, authors[i].text.strip()[0:15])                
+        #print(titles[i].text, authors[i].text.strip()[0:15])                
         
         t = titles[i].text
         a = authors[i].text.strip()[0:15]

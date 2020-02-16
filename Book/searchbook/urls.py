@@ -7,6 +7,9 @@ urlpatterns = [
     path('search', views.search, name="search"),
     path('bookdelete', views.delete_all_book, name="delete_all_book"),
     path('userdelete', views.delete_all_user, name="delete_all_user"),
+    
+    # 발표자 저장
+    path('usersave', views.save_one_user, name="save_one_user"),
    
     path('save', views.save, name="save"),
     # html에서 보낸 name의 값을 가져온다
