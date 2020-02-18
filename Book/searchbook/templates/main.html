@@ -12,15 +12,21 @@
         .table {
             width: 100%;
             border: 2px solid black;
+            border-collapse: collapse;
         }
-        th {
+        th{
             border: 1px solid black;
             text-align: center;
+        }
+        td{
+            border: 1px solid black;
+            text-align: center;    
+        }
+        #input_form {
+            display: inline-block;
+            border: 1px solid blue ;
+            text-align: left;
             
-        }
-        td {
-            border: 1px solid black;
-            text-align: center;
         }
         /* div.left_container {
             width : 50%;
@@ -57,12 +63,23 @@
         </form>
     </div>
     <br>
+    <div class="input_container">
+        <form id="input_form" method="GET" action="{% url 'book:save_one_user' %}">
+            <td><input type="text" name="episode" placeholder="회차"></td>
+            <td><input type="text" name="kind" placeholder="종류"></td>    
+            <td><input type="text" name="date" placeholder="2020. 2. 15"></td>    
+            <td><input type="text" name="user_name" placeholder="이름"></td>    
+            <td><input type="text" name="book_title" placeholder="제목"></td>    
+            <td><input type="text" name="book_author" placeholder="저자"></td>    
+            <td><input type="text" name="genre" placeholder="장르"></td>    
+            <td><input type="submit" value="누르기"></td>
+        </form>
+    </div>
+    <br>
     <div class="left_container" > 
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">발표자</th>
-                    <th scope="col"></th>
                     <th scope="col">제목</th>
                     <th scope="col">작가</th>
                     <th scope="col"></th>
@@ -71,13 +88,8 @@
             <tbody>               
                 {% for i in alldata %}
                 <tr>
-                    <form method="GET" action="{% url 'book:save_one_user' %}">
-                        <td><input type="text" name="user_name" value="{{i.name}}"></td>    
-                        <td><input type="submit" value="누르기"></td>
-                    
-                        <td><input type="hidden" name="book_title" value="{{i.title}}">{{i.title}}</td>       
-                        <td><input type="hidden" name="book_author" value="{{i.author}}">{{i.author}}</td>
-                    </form>
+                    <td><input type="hidden" name="book_title" value="{{i.title}}">{{i.title}}</td>       
+                    <td><input type="hidden" name="book_author" value="{{i.author}}">{{i.author}}</td>
                     <td><input type="button" name="data_id" value="지우기"
                         onclick="location.href='{% url 'book:delete_one' i.id %}'"></td>
                 </tr>

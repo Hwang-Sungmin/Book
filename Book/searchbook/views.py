@@ -7,7 +7,6 @@ from django.http.response import HttpResponse
 import requests
 # 공백문자 제거를 위해 
 import re
-
 # 구글 시트를 사용하기 위해서 import
 import gspread
 import pandas as pd
@@ -16,20 +15,34 @@ from datetime import datetime
 
 # 발표자 한명 저장
 def save_one_user(request):
-    a = request.GET['user_name']
-    b = request.GET['book_title']
-    c = request.GET['book_author']
-
-    print(a)
-    print(b)
-    print(c)
+    scope = [
+    'https://spreadsheets.google.com/feeds',    
+    ]
+    json_file_name = 'key.json'
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
+    gc = gspread.authorize(credentials)
+    spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1L8V9TSVD9iW7p9svQBZw2PUq8zQ8I13JdzLPZ3xunQk/edit#gid=0'
+    # 스프레스시트 문서 가져오기 
+    doc = gc.open_by_url(spreadsheet_url)
+    # 시트 선택하기 : 시트 이름이 Raw 인 곳
+    worksheet = doc.worksheet('Raw')
+    seeAll = worksheet.get_all_values()
     
-    return HttpResponse('', status=204 )
+    name = request.GET['user_name']
+    title = request.GET['book_title']
+    author = request.GET['book_author']
+    genre = request.GET['genre']
+    kind = request.GET['kind']
+    epi = request.GET['episode']
+    date = request.GET['date']
 
+    # 회차, 종류, 날짜, 이름, 제목, 저자, 장르
+    insert= [epi, kind, date, name ,title ,author, genre]
+    worksheet.insert_row(insert, 2)                       
+    return HttpResponse('', status=204)
 
 # Create your views here.
-def save(request):
-      
+def save(request):      
     return render(request, 'main.html')
 
 # 구글 시트에 저장되어있는 회원 정보 불러오기
@@ -65,8 +78,6 @@ def call(request):
     for i in range(3,len(seeAll),1):   
         if name in seeAll[i][3]:
             j+=1
-             #insert= ['478','정기','2020. 1. 31','황성민','파프리카','츠츠이 야스타카'
-            #print(seeAll[i][0:7], j)           
             inputDB = DB()
             inputDB.time = seeAll[i][0]
             inputDB.kind = seeAll[i][1]
@@ -76,6 +87,7 @@ def call(request):
             inputDB.genre = seeAll[i][6]
             inputDB.save()
         else:
+            
             pass
     all_DB = DB.objects.all()    
     context ={
@@ -109,10 +121,12 @@ def search(request):
     titles = soup.select('.detail > .title')
     authors = soup.select('.detail > .author ')
 
+    # 기존에 있던 데이터 지우기
+    datas = Data.objects.all()
+    datas.delete()
     # 공백제거    
     #print(len(titles))
     #print(len(authors))
-    
     # dic선언 type:class
     title = []
     author = []
@@ -162,6 +176,9 @@ def search(request):
         'author' : author,
         'alldata' : all_data,
     }
+    
+
+
     
     return render(request, 'main.html', context)
 
